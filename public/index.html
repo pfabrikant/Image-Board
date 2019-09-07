@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Bahianita|Darker+Grotesque&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>Image board</title>
+</head>
+<body>
+    <div class="main">
+        <h1>📷  Let's Vue Pics!</h1>
+        <vue-image v-if="imageId" v-bind:imageid="imageId.slice(1)" @close="closeBox">
+        </vue-image>
+        <div class="form">
+            <form method="post">
+                <input type="text" name="title" placeholder="title" v-model="title">
+                <input type="text" name="description" placeholder="description" v-model="description">
+                <input type="text" name="username" placeholder="username" v-model="username">
+                <input @change="changeHandler" type="file" name="file" accept="image/*">
+                <button @click="submitImage">Submit</button>
+
+            </form>
+        </div>
+        <div class="updateResults" v-if="updateResults">
+            <p>There are new uploaded pictures! Would you like to see them?</p>
+            <button type="button" name="button" @click="refreshResults">Definitely</button>
+            <button type="button" name="button" @click="closeUpdateResults">Not interested</button>
+        </div>
+        <div  class="img_row">
+
+            <div class="img" v-for="picture in pictures" v-if="visible" @click="seen">
+                <a :href="'#' + picture.id">
+                    <img v-bind:src="picture.url" alt="image">
+                    <p>{{picture.title}}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script type="text/x-template" id="vue-image">
+        <div class="vueimage outer">
+            <div class="vueimage inner">
+                <div class="xlImage">
+                    <a :href="'#' + previousImageId">
+                        <h3 v-if="previousImageId">  &lt;previous </h3>
+                    </a>
+                        <img v-bind:src="url" v-bind:alt="title">
+                    <a :href="'#' + nextImageId">
+                        <h3 v-if="nextImageId"> next&gt; </h3>
+                    </a>
+                </div> <span id="x" @click="closeBox">x</span>
+                <h2> {{title}} </h2>
+                <div class="description">
+                <p> {{ description}} </p>
+                <p> Uploaded by {{imageUsername}} on {{created_at}}</p>
+            </div>
+            <div class="commentsDiv">
+                <div class="addComment">
+                         <h3> Add a comment! </h3>
+               <form>
+                        <label for="comment">Comment</label>
+                        <input name="comment" type="text" v-model:value="comment">
+                        <label for="username">Username</label>
+                        <input name="username" type="text" v-model:value="commentUsername">
+                        <button type="button" @click="submitComment"> Submit </button>
+                    </form>
+
+            </div>
+
+
+                <h3> Latest comments: </h3>
+                <div class="comment" v-for="comment in comments">
+                    <div class="original">
+                    <div  class="originalComment">
+                   <p>{{comment.comment}}          {{comment.username}} on {{comment.created_at}} </p>
+               </div>
+                   <div class="reply" :id="comment.id">
+                       <form>
+
+                           <label for="reply">reply</label>
+                           <input name="reply" type="text"  v-model:value="reply" >
+
+
+                           <label for="replyusername">Username</label>
+                           <input name="replyusername" type="text"  v-model:value="replyUsername" >
+
+
+                           <button type="button" @click="submitReply"> reply </button>
+                      
+                       </form>
+                 </div>
+                </div>
+                <div class="replies">
+                    <h3> Latest replies on this comment:</h3>
+
+                    <div class=showReplies v-for="reply in comment.replies">
+                        <p>{{reply.text}} by {{reply.username}} on {{reply.created_at}} </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</div>
+        </div>
+        </div>
+    </div>
+    </script>
+    <script src="/js/vue.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <script src="/js/axios.min.js"></script>
+    <script type="text/javascript" src="/js/vueImage-component.js"></script>
+
+    <script type="text/javascript" src="script.js">
+
+    </script>
+</body>
+</html>
